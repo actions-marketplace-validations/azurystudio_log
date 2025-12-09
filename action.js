@@ -975,12 +975,12 @@ var require_lib = __commonJS({
     var RetryableHttpVerbs = ["OPTIONS", "GET", "DELETE", "HEAD"];
     var ExponentialBackoffCeiling = 10;
     var ExponentialBackoffTimeSlice = 5;
-    var HttpClientError = class extends Error {
+    var HttpClientError = class _HttpClientError extends Error {
       constructor(message, statusCode) {
         super(message);
         this.name = "HttpClientError";
         this.statusCode = statusCode;
-        Object.setPrototypeOf(this, HttpClientError.prototype);
+        Object.setPrototypeOf(this, _HttpClientError.prototype);
       }
     };
     exports.HttpClientError = HttpClientError;
@@ -1571,13 +1571,13 @@ var require_oidc_utils = __commonJS({
     var http_client_1 = require_lib();
     var auth_1 = require_auth();
     var core_1 = require_core();
-    var OidcClient = class {
+    var OidcClient = class _OidcClient {
       static createHttpClient(allowRetry = true, maxRetry = 10) {
         const requestOptions = {
           allowRetries: allowRetry,
           maxRetries: maxRetry
         };
-        return new http_client_1.HttpClient("actions/oidc-client", [new auth_1.BearerCredentialHandler(OidcClient.getRequestToken())], requestOptions);
+        return new http_client_1.HttpClient("actions/oidc-client", [new auth_1.BearerCredentialHandler(_OidcClient.getRequestToken())], requestOptions);
       }
       static getRequestToken() {
         const token = process.env["ACTIONS_ID_TOKEN_REQUEST_TOKEN"];
@@ -1596,7 +1596,7 @@ var require_oidc_utils = __commonJS({
       static getCall(id_token_url) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-          const httpclient = OidcClient.createHttpClient();
+          const httpclient = _OidcClient.createHttpClient();
           const res = yield httpclient.getJson(id_token_url).catch((error) => {
             throw new Error(`Failed to get ID Token. 
  
@@ -1614,13 +1614,13 @@ var require_oidc_utils = __commonJS({
       static getIDToken(audience) {
         return __awaiter(this, void 0, void 0, function* () {
           try {
-            let id_token_url = OidcClient.getIDTokenUrl();
+            let id_token_url = _OidcClient.getIDTokenUrl();
             if (audience) {
               const encodedAudience = encodeURIComponent(audience);
               id_token_url = `${id_token_url}&audience=${encodedAudience}`;
             }
             core_1.debug(`ID token url is ${id_token_url}`);
-            const id_token = yield OidcClient.getCall(id_token_url);
+            const id_token = yield _OidcClient.getCall(id_token_url);
             core_1.setSecret(id_token);
             return id_token;
           } catch (error) {
@@ -1668,7 +1668,7 @@ var require_summary = __commonJS({
     exports.summary = exports.markdownSummary = exports.SUMMARY_DOCS_URL = exports.SUMMARY_ENV_VAR = void 0;
     var os_1 = require("os");
     var fs_1 = require("fs");
-    var { access, appendFile, writeFile: writeFile2 } = fs_1.promises;
+    var { access, appendFile, writeFile } = fs_1.promises;
     exports.SUMMARY_ENV_VAR = "GITHUB_STEP_SUMMARY";
     exports.SUMMARY_DOCS_URL = "https://docs.github.com/actions/using-workflows/workflow-commands-for-github-actions#adding-a-job-summary";
     var Summary = class {
@@ -1726,7 +1726,7 @@ var require_summary = __commonJS({
         return __awaiter(this, void 0, void 0, function* () {
           const overwrite = !!(options === null || options === void 0 ? void 0 : options.overwrite);
           const filePath = yield this.filePath();
-          const writeFunc = overwrite ? writeFile2 : appendFile;
+          const writeFunc = overwrite ? writeFile : appendFile;
           yield writeFunc(filePath, this._buffer, { encoding: "utf8" });
           return this.emptyBuffer();
         });
@@ -4599,7 +4599,7 @@ var require_lib3 = __commonJS({
     var Readable = Stream.Readable;
     var BUFFER = Symbol("buffer");
     var TYPE = Symbol("type");
-    var Blob = class {
+    var Blob = class _Blob {
       constructor() {
         this[TYPE] = "";
         const blobParts = arguments[0];
@@ -4618,7 +4618,7 @@ var require_lib3 = __commonJS({
               buffer = Buffer.from(element.buffer, element.byteOffset, element.byteLength);
             } else if (element instanceof ArrayBuffer) {
               buffer = Buffer.from(element);
-            } else if (element instanceof Blob) {
+            } else if (element instanceof _Blob) {
               buffer = element[BUFFER];
             } else {
               buffer = Buffer.from(typeof element === "string" ? element : String(element));
@@ -4680,7 +4680,7 @@ var require_lib3 = __commonJS({
         const span = Math.max(relativeEnd - relativeStart, 0);
         const buffer = this[BUFFER];
         const slicedBuffer = buffer.slice(relativeStart, relativeStart + span);
-        const blob = new Blob([], { type: arguments[2] });
+        const blob = new _Blob([], { type: arguments[2] });
         blob[BUFFER] = slicedBuffer;
         return blob;
       }
@@ -5057,7 +5057,7 @@ var require_lib3 = __commonJS({
       return void 0;
     }
     var MAP = Symbol("map");
-    var Headers = class {
+    var Headers = class _Headers {
       /**
        * Headers class
        *
@@ -5067,7 +5067,7 @@ var require_lib3 = __commonJS({
       constructor() {
         let init = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : void 0;
         this[MAP] = /* @__PURE__ */ Object.create(null);
-        if (init instanceof Headers) {
+        if (init instanceof _Headers) {
           const rawHeaders = init.raw();
           const headerNames = Object.keys(rawHeaders);
           for (const headerName of headerNames) {
@@ -5336,7 +5336,7 @@ var require_lib3 = __commonJS({
     }
     var INTERNALS$1 = Symbol("Response internals");
     var STATUS_CODES = http.STATUS_CODES;
-    var Response = class {
+    var Response = class _Response {
       constructor() {
         let body = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : null;
         let opts = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
@@ -5384,7 +5384,7 @@ var require_lib3 = __commonJS({
        * @return  Response
        */
       clone() {
-        return new Response(clone(this), {
+        return new _Response(clone(this), {
           url: this.url,
           status: this.status,
           statusText: this.statusText,
@@ -5428,7 +5428,7 @@ var require_lib3 = __commonJS({
       const proto = signal && typeof signal === "object" && Object.getPrototypeOf(signal);
       return !!(proto && proto.constructor.name === "AbortSignal");
     }
-    var Request = class {
+    var Request = class _Request {
       constructor(input) {
         let init = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
         let parsedURL;
@@ -5498,7 +5498,7 @@ var require_lib3 = __commonJS({
        * @return  Request
        */
       clone() {
-        return new Request(this);
+        return new _Request(this);
       }
     };
     Body.mixIn(Request.prototype);
@@ -5799,7 +5799,7 @@ var require_lib3 = __commonJS({
         const headers = response.headers;
         if (headers["transfer-encoding"] === "chunked" && !headers["content-length"]) {
           response.once("close", function(hadError) {
-            const hasDataListener = socket.listenerCount("data") > 0;
+            const hasDataListener = socket && socket.listenerCount("data") > 0;
             if (hasDataListener && !hadError) {
               const err = new Error("Premature close");
               err.code = "ERR_STREAM_PREMATURE_CLOSE";
@@ -7764,28 +7764,79 @@ var require_github = __commonJS({
 // action.ts
 var import_core = __toESM(require_core());
 var import_github = __toESM(require_github());
-var import_promises = require("fs/promises");
-async function readChangelog() {
-  try {
-    return await (0, import_promises.readFile)("changelog.md", { encoding: "utf-8" });
-  } catch (err) {
-    return "";
+
+// node_modules/indent-string/index.js
+function indentString(string, count = 1, options = {}) {
+  const {
+    indent = " ",
+    includeEmptyLines = false
+  } = options;
+  if (typeof string !== "string") {
+    throw new TypeError(
+      `Expected \`input\` to be a \`string\`, got \`${typeof string}\``
+    );
   }
-}
-async function getLatestRelease(rest) {
-  try {
-    const data = await rest.repos.getLatestRelease({
-      ...import_github.context.repo
-    });
-    return data;
-  } catch (err) {
-    return {
-      status: 404
-    };
+  if (typeof count !== "number") {
+    throw new TypeError(
+      `Expected \`count\` to be a \`number\`, got \`${typeof count}\``
+    );
   }
+  if (count < 0) {
+    throw new RangeError(
+      `Expected \`count\` to be at least 0, got \`${count}\``
+    );
+  }
+  if (typeof indent !== "string") {
+    throw new TypeError(
+      `Expected \`options.indent\` to be a \`string\`, got \`${typeof indent}\``
+    );
+  }
+  if (count === 0) {
+    return string;
+  }
+  const regex = includeEmptyLines ? /^/gm : /^(?!\s*$)/gm;
+  return string.replace(regex, indent.repeat(count));
 }
+
+// action.ts
+var import_promises = require("node:fs/promises");
 async function action() {
-  const { rest } = (0, import_github.getOctokit)((0, import_core.getInput)("token")), tag = import_github.context.ref.replace("refs/tags/", ""), { data: latestRelease, status } = await getLatestRelease(rest);
+  const { rest } = (0, import_github.getOctokit)((0, import_core.getInput)("token"));
+  const tag = import_github.context.ref.replace("refs/tags/", "");
+  const fetchChangelog = async () => {
+    try {
+      const { data: data2 } = await rest.repos.getContent({
+        ...import_github.context.repo,
+        path: "changelog.md"
+      });
+      return [data2.sha, await (0, import_promises.readFile)("changelog.md", { encoding: "utf-8" })];
+    } catch (err) {
+      return [null, ""];
+    }
+  };
+  const getLatestRelease = async () => {
+    try {
+      const data2 = await rest.repos.listReleases({
+        ...import_github.context.repo
+      });
+      data2.data[0].tag_name;
+      return {
+        data: data2.data[0],
+        status: data2.status
+      };
+    } catch (err) {
+      return {
+        status: 404
+      };
+    }
+  };
+  const { data: latestRelease, status } = await getLatestRelease();
+  console.info(
+    `Latest release: ${latestRelease?.tag_name} (published at ${latestRelease?.created_at})`
+  );
+  if (!latestRelease) {
+    throw new Error("Failed to fetch latest release.");
+  }
   let { data } = await rest.pulls.list({
     ...import_github.context.repo,
     per_page: 100,
@@ -7793,43 +7844,91 @@ async function action() {
     state: "closed",
     direction: "desc"
   });
-  data = [...data, ...(await rest.pulls.list({
-    ...import_github.context.repo,
-    per_page: 100,
-    sort: "updated",
-    state: "closed",
-    direction: "desc",
-    page: 2
-  })).data];
+  data = [
+    ...data,
+    ...(await rest.pulls.list({
+      ...import_github.context.repo,
+      per_page: 100,
+      sort: "updated",
+      state: "closed",
+      direction: "desc",
+      page: 2
+    })).data
+  ];
   const year = (/* @__PURE__ */ new Date()).getUTCFullYear(), month = (/* @__PURE__ */ new Date()).getUTCMonth() + 1, day = (/* @__PURE__ */ new Date()).getUTCDate();
   let changelogBody = `## [${tag}](https://github.com/${import_github.context.repo.owner}/${import_github.context.repo.repo}/releases/tag/${tag})
 `, releaseBody = `### ${tag} / ${year}.${month < 10 ? `0${month}` : month}.${day < 10 ? `0${day}` : day}
 `;
   const style = (0, import_core.getInput)("style").split(", ");
-  for (const { user, title, number, merged_at, body } of data) {
-    if (merged_at === null)
-      continue;
-    if (status === 200 && new Date(latestRelease.created_at).getTime() > new Date(merged_at).getTime())
-      continue;
-    const url = `https://github.com/${import_github.context.repo.owner}/${import_github.context.repo.repo}/pull/${number}`;
-    changelogBody += `
-* ${title} `;
-    releaseBody += `
-* ${title} `;
-    if (style.includes("author")) {
-      changelogBody += `([#${number}](${url}))${user?.login ? ` by [@${user?.login}](https://github.com/${user?.login})` : ""}`;
-      releaseBody += `(${url})${user?.login ? ` by @${user?.login}` : ""}`;
-    } else {
-      changelogBody += `([#${number}](${url}))`;
-      releaseBody += `(${url})`;
+  data.sort((a, b) => {
+    const x = a.title.toLowerCase(), y = b.title.toLowerCase();
+    if (x < y) {
+      return -1;
     }
-    if (style.includes("description")) {
+    if (x > y) {
+      return 1;
+    }
+    return 0;
+  });
+  for (const { user, merged_at, number, body, merge_commit_sha } of data) {
+    if (merged_at === null || user?.type === "Bot" || merge_commit_sha === null || status !== 200) {
+      continue;
+    }
+    if (new Date(latestRelease.created_at).getTime() >= new Date(merged_at).getTime()) {
+      continue;
+    }
+    const c = await rest.repos.getCommit({
+      ...import_github.context.repo,
+      ref: merge_commit_sha
+    });
+    if (c.status !== 200) {
+      continue;
+    }
+    if (c.data.commit.committer?.date && new Date(c.data.commit.committer?.date).getTime() <= new Date(latestRelease.created_at).getTime()) {
+      continue;
+    }
+    const linkifyReferences = (commit) => {
+      const issueRegex = /(?<!\w)(?:(?<organization>[a-z\d](?:[a-z\d-]{0,37}[a-z\d])?)\/(?<repository>[\w.-]{1,100}))?(?<!(?:\/\.{1,2}))#(?<issueNumber>[1-9]\d{0,9})\b/g;
+      const matches = commit.match(issueRegex);
+      if (!matches) {
+        return commit;
+      }
+      for (const m of matches) {
+        commit = commit.replace(
+          `(${m})`,
+          `([${m}](https://github.com/${import_github.context.repo.owner}/${import_github.context.repo.repo}/pull/${m.slice(1)}))`
+        );
+      }
+      return commit;
+    };
+    const i = c.data.commit.message.indexOf(")\n\n");
+    const title = c.data.commit.message.substring(0, i > 0 ? i + 1 : void 0);
+    const comments = (await rest.issues.listComments({
+      ...import_github.context.repo,
+      issue_number: number
+    })).data;
+    if (comments.length > 0 && comments.some(
+      (c2) => c2.body !== void 0 && c2.body === "?log ignore" && (c2.author_association === "COLLABORATOR" || c2.author_association === "MEMBER" || c2.author_association === "OWNER")
+    )) {
+      continue;
+    }
+    changelogBody += `
+* ${linkifyReferences(title)}`;
+    releaseBody += `
+* ${linkifyReferences(title)}`;
+    if (style.includes("author")) {
+      changelogBody += user?.login ? ` by [@${user?.login}](https://github.com/${user?.login})` : "";
+      releaseBody += user?.login ? ` by @${user?.login}` : "";
+    }
+    if (style.includes("description") && body !== null && body.length > 0) {
       changelogBody += `
 
-  ${body}`;
+${indentString(body, 2)}
+`;
       releaseBody += `
 
-  ${body}`;
+${indentString(body, 2)}
+`;
     }
   }
   const { data: release } = await rest.repos.createRelease({
@@ -7841,16 +7940,29 @@ async function action() {
     draft: (0, import_core.getBooleanInput)("draft") ?? false,
     prerelease: tag.includes("canary") || tag.includes("nightly") || tag.includes("rc") || (0, import_core.getBooleanInput)("prerelease"),
     target_commitish: import_github.context.sha
-  }), content = await readChangelog();
-  await (0, import_promises.writeFile)("changelog.md", `${changelogBody}${content === "" ? "\n" : `
+  });
+  const [sha, content] = await fetchChangelog();
+  await rest.repos.createOrUpdateFileContents({
+    ...import_github.context.repo,
+    path: "changelog.md",
+    content: Buffer.from(
+      `${changelogBody}${content === "" ? "\n" : `
 
-${content}`}`);
+${content}`}`
+    ).toString("base64"),
+    message: (0, import_core.getInput)("commit_message").replace("{tag}", tag),
+    ...sha !== null && { sha }
+  });
   (0, import_core.setOutput)("release_id", release.id);
-  (0, import_core.setOutput)("tag_name", release.tag_name);
+  (0, import_core.setOutput)("tag_name", tag);
   (0, import_core.setOutput)("created_at", release.created_at);
+  (0, import_core.setOutput)("release_body", releaseBody);
+  (0, import_core.setOutput)("changelog_body", changelogBody);
 }
 try {
   action();
 } catch (err) {
-  (0, import_core.setFailed)(err instanceof Error ? err.message : "Something unexpected happened.");
+  (0, import_core.setFailed)(
+    err instanceof Error ? err.message : "Something unexpected happened."
+  );
 }

@@ -2,15 +2,16 @@
   "name": "log",
   "private": true,
   "scripts": {
-    "build": "esbuild action.ts --bundle --format=cjs --platform=node --legal-comments=none --outfile=action.js"
+    "build": "esbuild action.ts --bundle --format=cjs --platform=node --legal-comments=none --outfile=action.js && deno fmt action.ts --no-semicolons --single-quote"
   },
   "dependencies": {
     "@actions/core": "^1.10.0",
-    "@actions/github": "^5.1.1"
+    "@actions/github": "^5.1.1",
+    "indent-string": "^5.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.2.5",
-    "esbuild": "^0.18.0",
-    "typescript": "^5.1.3"
+    "@types/node": "^20.4.1",
+    "esbuild": "^0.18.11",
+    "typescript": "^5.1.6"
   }
 }
